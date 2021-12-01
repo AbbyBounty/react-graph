@@ -14,6 +14,7 @@ import {
 
 } from 'react-vis';
 
+import { Table } from "./table";
 // const Chart = () => {
 
 //   const [useCanvas, setUseCanvas] = useState(false)
@@ -162,14 +163,14 @@ export default class Chart extends React.Component {
         title: "Apples",
         color: "#12939A",
         disabled: false,
-        data: [{ x: 0, y: 12 }, { x: 1, y: 22 }, { x: 2, y: 32 }, { x: 3, y: 42 }]
+        data: [{ x: 0, y: 15 }, { x: 1, y: 24 }, { x: 2, y: 31 }, { x: 3, y: 42 }]
       },
 
       {
         title: "Orange",
         color: "#79C7E3",
         disabled: false,
-        data: [{ x: 0, y: 12 }, { x: 1, y: 22 }, { x: 2, y: 32 }, { x: 3, y: 42 }]
+        data: [{ x: 0, y: 11}, { x: 1, y: 27 }, { x: 2, y: 38 }, { x: 3, y: 40 }]
       },
 
       {
@@ -177,12 +178,14 @@ export default class Chart extends React.Component {
         disabled: false,
         color: "pink",
 
-        data: [{ x: 0, y: 12 }, { x: 1, y: 22 }, { x: 2, y: 32 }, { x: 3, y: 42 }]
-      }
-     
-    
-    ],
-      show: false
+        data: [{ x: 0, y: 17 }, { x: 1, y: 22 }, { x: 2, y: 36 }, { x: 3, y: 49 }]
+      },
+
+
+      ],
+      show: false,
+      setData: {}
+
     };
   }
 
@@ -192,7 +195,7 @@ export default class Chart extends React.Component {
     this.setState({ series });
 
   };
-
+ 
   setShow = () => {
 
     this.setState({
@@ -204,54 +207,72 @@ export default class Chart extends React.Component {
     this.setState({
       show: true
     })
-    console.log("🚀 ~ file: chart.js ~ line 238 ~ Chart ~ this.state.show", this.state.show)
   }
+
+
 
   render() {
     const { series } = this.state;
     const useCanvas = false
 
     const BarSeries = useCanvas ? VerticalBarSeriesCanvas : VerticalBarSeries;
+   const setNewData =  (d) => {
 
+    this.setState({setData:d})
+    }
 
 
     return (
       <div>
-        <XYPlot className="clustered-stacked-bar-chart-example"
-          xType="ordinal"
-          stackBy="y"
-          width={450}
-          height={500}
-        >
 
-          <DiscreteColorLegend
-            onItemClick={this.clickHandler}
-            width={180}
-            items={series}
-            style={{ position: 'absolute', left: '500px', top: '10px' }}
+        <div className="container mt-6">
+          <div className="row">
+            <div className="col-sm">
+              <XYPlot className="clustered-stacked-bar-chart-example"
+                xType="ordinal"
+                stackBy="y"
+                width={450}
+                height={500}
+              >
 
-          />
-          <HorizontalGridLines />
+                <DiscreteColorLegend
+                  onItemClick={this.clickHandler}
+                  width={180}
+                  items={series}
+                  style={{ position: 'absolute', left: '460px', top: '10px' }}
 
-          <XAxis />
-          <YAxis />
-
-
-          {
-            series.map((d) => {
-              if (d.disabled != true) {
-                return <VerticalBarSeriesCanvas
-                  cluster={d.cluster}
-                  color={d.color}
-                  data={d.data}
                 />
-              }
+                <HorizontalGridLines />
+
+                <XAxis />
+                <YAxis />
 
 
-            })
+                {
+                  series.map((d) => {
+                    if (d.disabled != true) {
+                      return <VerticalBarSeries
+                        cluster={d.cluster}
+                        color={d.color}
+                        data={d.data}
+                        onSeriesMouseOver={()=>{setNewData(d)}}
+                      />
+                    }
 
-          }
-        </XYPlot>
+
+                  })
+
+                }
+              </XYPlot>
+            </div>
+
+            <div className="col-sm">
+              <Table data={this.state.setData} />
+            </div>
+
+          </div>
+
+        </div>
 
       </div >
     );
