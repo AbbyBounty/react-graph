@@ -1,7 +1,5 @@
 
 import React from 'react';
-import { useState, Fragment, useEffect } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
 import {
   XYPlot,
   XAxis,
